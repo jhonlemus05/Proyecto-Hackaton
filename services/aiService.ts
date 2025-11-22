@@ -1,9 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { Message, UploadedFile } from "../types";
 
-// Initialize the Google GenAI client
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 export const generateResponse = async (
   history: Message[],
   userQuery: string,
@@ -15,6 +12,15 @@ export const generateResponse = async (
   const hasContext = readyFiles.length > 0;
 
   try {
+    const apiKey = process.env.API_KEY;
+    // Explicit check to ensure we catch the error gracefully if key is missing
+    if (!apiKey) {
+        throw new Error("API Key not found. Please check environment configuration.");
+    }
+
+    // Initialize the client INSIDE the function to prevent white-screen crashes on app load
+    const ai = new GoogleGenAI({ apiKey: apiKey });
+    
     // Use Gemini 2.5 Flash for speed and long context window
     const modelId = 'gemini-2.5-flash';
 
@@ -120,8 +126,19 @@ export const generateResponse = async (
 
   } catch (error) {
     console.error("Gemini API Error:", error);
+    // Handle the specific "API Key not set" error gracefully in the UI
+    let errorMessage = "Error de conexión con Kognia AI.";
+    
+    if (error instanceof Error) {
+        if (error.message.includes("API Key")) {
+            errorMessage = "⚠️ Error de configuración: No se ha detectado la API Key. Asegúrate de configurar la variable de entorno API_KEY en tu plataforma de despliegue.";
+        } else {
+            errorMessage = `Error: ${error.message}`;
+        }
+    }
+
     return {
-        text: "Error de conexión con Kognia AI. Por favor verifica tu conexión a internet.",
+        text: errorMessage,
         citations: []
     };
   }
