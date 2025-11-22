@@ -1,5 +1,5 @@
 {
-  "name": "copy-of-hack-kognia-1.0---legal-ai-v2",
+  "name": "copy-of-copy-of-copy-of-copy-of-hack-kognia-1.0---legal-ai-v6",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,9 +10,12 @@
   },
   "dependencies": {
     "react-dom": "^19.2.0",
-    "react": "^19.2.0",
+    "lucide-react": "^0.554.0",
     "@google/genai": "^1.30.0",
-    "lucide-react": "^0.554.0"
+    "react": "^19.2.0",
+    "express": "^5.1.0",
+    "dotenv": "^17.2.3",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
